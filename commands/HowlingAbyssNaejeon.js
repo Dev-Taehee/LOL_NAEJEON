@@ -9,6 +9,6 @@ module.exports = {
     async execute(interaction){
         const team1_name = interaction.options.getChannel("1팀채널");
         console.log(team1_name.members.size);
-        return interaction.reply(`Server name: ${team1_name.members.size}\nTotal members: ${interaction.guild.memberCount}`);
+        return interaction.reply(`미완성된 명령어입니다.`);
     }
 }

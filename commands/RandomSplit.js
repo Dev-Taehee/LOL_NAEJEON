@@ -3,7 +3,7 @@ const { SlashCommandBuilder, ChannelType, EmbedBuilder, ActionRowBuilder, Button
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("랜덤나누기")
-        .setDescription("음성 채널에 속한 멤버들을 랜덤하게 나누어 음성채널에 입장시킵니다.")
+        .setDescription("음성 채널에 속한 멤버들을 랜덤하게 나누어 음성채널에 입장시킵니다. (테스트 진행 중)")
         .addChannelOption((option)=>option.setName("본채널").setDescription("내전에 참가하고자하는 사람들이 모인 채널을 선택해주세요.").setRequired(true).addChannelTypes(ChannelType.GuildVoice))
         .addChannelOption((option)=>option.setName("1팀채널").setDescription("1팀이 들어갈 채널을 선택해주세요.").setRequired(true).addChannelTypes(ChannelType.GuildVoice))
         .addChannelOption((option)=>option.setName("2팀채널").setDescription("2팀이 들어갈 채널을 선택해주세요").setRequired(true).addChannelTypes(ChannelType.GuildVoice)),
@@ -21,7 +21,10 @@ module.exports = {
         // }
 
         if(totalNum>10){
-            return interaction.reply("음성 채널의 인원이 10명을 초과하였습니다.\n10명 이하의 인원이 참가하여야합니다.")
+            return interaction.reply("음성 채널의 인원이 10명을 초과하였습니다.\n10명 이하의 인원이 참가하여야합니다.");
+        }
+        if(totalNum===1){
+            return interaction.reply('2명 이상의 인원이 한 음성채널에 있어야합니다.');
         }
 
         const memberList = [];
@@ -34,7 +37,11 @@ module.exports = {
         const [team1MemberList, team2MemberList] = await splitMember(memberList);
 
         const embed = new EmbedBuilder()
-            .setTitle('Test');
+            .setTitle('팀 세팅 완료')
+            .addFields(
+                {name:'Team1', value: team1MemberList.join("\n"), inline: true},
+                {name: 'Team2', value: team2MemberList.join('\n'), inline: true}
+            );
 
         const row = new ActionRowBuilder()
             .addComponents(
@@ -50,18 +57,13 @@ module.exports = {
                     .setStyle('Danger')
             )
 
-        await interaction.channel.send({embeds: [embed], components: [row]});
+        await interaction.reply({embeds: [embed], components: [row]});
 
         const filter = i => i.user.id === interaction.member.id;
-        const collector = interaction.channel.createMessageComponentCollector({filter, time:5000});
+        const collector = interaction.channel.createMessageComponentCollector({filter, time:15000});
 
-        collector.on('collect', async i => {
-            await i.update({ content: '선택이 완료되었습니다!', components: [] });
-        });
-
-        collector.on('end', async ( collection ) => {
-            if (collection.first()?.customId === '진행'){
-                console.log('여기 들어왔어');
+        collector.on('collect', async (collection) => {
+            if (collection.customId === '진행'){
                 await members.forEach((member) => {
                     if(team1MemberList.includes(member.displayName)){
                         member.voice.setChannel(team1VoiceChannel);
@@ -69,13 +71,21 @@ module.exports = {
                         member.voice.setChannel(team2VoiceChannel);
                     }
                 })
-                hostChannel.send('진행시켜~~');
-            }else if (collection.first()?.customId === '거절'){
-                hostChannel.send('거절할거야');
+                collection.reply('게임을 시작합니다!!');
+                collector.stop();
+            }else if (collection.customId === '거절'){
+                collection.reply('음성 채널 세팅을 진행하지 않습니다.\n게임을 시작합니다!!');
+                collector.stop();
             }
         });
 
-        return interaction.reply('명령어가 진행 중 입니다.');
+        collector.on('end', async ( collected ) => {
+            if(collector.collected.size===0){
+                hostChannel.send('입력시간초과')
+            }else{
+                console.log('잘 작동되었음')
+            }
+        });
     }
 }
 

@@ -3,7 +3,7 @@ const { SlashCommandBuilder, ChannelType, EmbedBuilder, ActionRowBuilder, Button
 module.exports = {
     data: new SlashCommandBuilder()
         .setName("랜덤나누기")
-        .setDescription("음성 채널에 속한 멤버들을 랜덤하게 나누어 음성채널에 입장시킵니다. (테스트 진행 중)")
+        .setDescription("음성 채널에 속한 멤버들을 랜덤하게 나누어 음성채널에 입장시킵니다.")
         .addChannelOption((option)=>option.setName("본채널").setDescription("내전에 참가하고자하는 사람들이 모인 채널을 선택해주세요.").setRequired(true).addChannelTypes(ChannelType.GuildVoice))
         .addChannelOption((option)=>option.setName("1팀채널").setDescription("1팀이 들어갈 채널을 선택해주세요.").setRequired(true).addChannelTypes(ChannelType.GuildVoice))
         .addChannelOption((option)=>option.setName("2팀채널").setDescription("2팀이 들어갈 채널을 선택해주세요").setRequired(true).addChannelTypes(ChannelType.GuildVoice)),

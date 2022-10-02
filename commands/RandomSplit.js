@@ -71,10 +71,12 @@ module.exports = {
                         member.voice.setChannel(team2VoiceChannel);
                     }
                 })
-                collection.reply('게임을 시작합니다!!');
+                collection.update({components: []});
+                hostChannel.send('게임을 시작합니다!!')
                 collector.stop();
             }else if (collection.customId === '거절'){
-                collection.reply('음성 채널 세팅을 진행하지 않습니다.\n게임을 시작합니다!!');
+                collection.update({components: []});
+                hostChannel.send('음성 채널 세팅을 진행하지 않습니다.\n게임을 시작합니다!!');
                 collector.stop();
             }
         });

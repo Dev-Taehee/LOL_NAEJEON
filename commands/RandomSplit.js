@@ -23,8 +23,8 @@ module.exports = {
         if(totalNum>10){
             return interaction.reply("음성 채널의 인원이 10명을 초과하였습니다.\n10명 이하의 인원이 참가하여야합니다.");
         }
-        if(totalNum===1){
-            return interaction.reply('2명 이상의 인원이 한 음성채널에 있어야합니다.');
+        if(totalNum===0 || totalNum==1){
+            return interaction.reply('2명 이상의 인원이 본채널에 있어야합니다.');
         }
 
         const memberList = [];

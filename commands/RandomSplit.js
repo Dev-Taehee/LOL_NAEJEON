@@ -71,19 +71,23 @@ module.exports = {
                         member.voice.setChannel(team2VoiceChannel);
                     }
                 })
-                collection.update({components: []});
+                await row.components.forEach((component) => {component.setDisabled(true)});
+                collection.update({components: [row]});
                 hostChannel.send('게임을 시작합니다!!')
                 collector.stop();
             }else if (collection.customId === '거절'){
-                collection.update({components: []});
+                await row.components.forEach((component) => {component.setDisabled(true)});
+                collection.update({components: [row]});
                 hostChannel.send('음성 채널 세팅을 진행하지 않습니다.\n게임을 시작합니다!!');
                 collector.stop();
             }
         });
 
         collector.on('end', async ( collected ) => {
-            if(collector.collected.size===0){
-                hostChannel.send('입력시간초과')
+            if(collected.size===0){
+                await row.components.forEach((component) => {component.setDisabled(true)});
+                await interaction.editReply({embeds: [embed], components: [row]});
+                hostChannel.send('입력시간초과');
             }else{
                 console.log('잘 작동되었음')
             }

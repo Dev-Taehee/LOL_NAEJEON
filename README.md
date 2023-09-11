@@ -8,6 +8,8 @@
 **개선 방안**  </br>
 디스코드에서 제공하는 discord.js API를 활용하여 음성 채널에 참여한 10명의 인원을 한번에 파악한 후, 5대5로 랜덤하게 나누어준 뒤 자동으로 음성채널을 옮겨주는 방식으로 개선하였습니다.  </br>
 
+<img src="img/discord.gif" loop=infinite />
+
 ## 사용하려면  </br>
 제 코드를 가져간 후, config-sample.json 파일의 이름을 config.json 파일로 변경합니다.  </br>
 config.json 파일에 설정된 값들을 필요에 맞게 입력하시면됩니다.  </br>
